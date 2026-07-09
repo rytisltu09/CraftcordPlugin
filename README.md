@@ -49,7 +49,9 @@ CraftCordPlugin enables you to build:
 
 ---
 
-# 📦 Installation
+# 📦 Installation (You may skip those steps, if you've install Craftcord through Modirinth)
+
+### Modirinth Link: https://modrinth.com/plugin/craftcord-plugin
 
 ## 1. Build
 
