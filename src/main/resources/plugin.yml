@@ -1,0 +1,8 @@
+name: CraftCordPlugin
+version: '${version}'
+main: org.craftcord.craftcordplugin.CraftCordPlugin
+api-version: '1.21'
+load: POSTWORLD
+author: CraftCord
+description: Paper-side bridge exposing authenticated HTTP and WebSocket APIs for the CraftCord Python SDK.
+website: https://github.com/craftcord/CraftCordPlugin

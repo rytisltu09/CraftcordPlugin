@@ -1,0 +1,10 @@
+host: 0.0.0.0
+port: 8080
+websocketPath: /ws
+httpBasePath: /api/v1
+apiToken: change-me
+enableHttp: true
+enableWebSocket: true
+logRequests: false
+logEvents: false
+
