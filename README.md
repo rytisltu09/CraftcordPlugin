@@ -49,17 +49,9 @@ CraftCordPlugin enables you to build:
 
 ---
 
-# 📦 Installation (You may skip those steps, if you've install Craftcord through Modirinth)
+# 📦 Installation
 
 ### Modirinth Link: https://modrinth.com/plugin/craftcord-plugin
-
-## 1. Build
-
-```bash
-./gradlew clean shadowJar
-```
-
-## 2. Install
 
 Copy the generated JAR into your server's `plugins/` folder.
 
@@ -77,8 +69,6 @@ plugins/CraftCordPlugin/config.yml
 ```
 
 Edit the configuration and restart your server.
-
----
 
 # ⚙️ Configuration
 
