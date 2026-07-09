@@ -1,10 +1,7 @@
 # CraftCordPlugin
 
 CraftCordPlugin is a **Paper-only** Minecraft server plugin that exposes authenticated HTTP and WebSocket APIs for the CraftCord Python SDK.
-
-It is the Minecraft-side bridge in this architecture:
-
-Paper Server -> CraftCordPlugin -> HTTP/WebSocket API -> CraftCord Python SDK -> Discord bots and automation apps
+It is directly to be used with Craftcord.py library, which is in https://github.com/rytisltu09/Craftcord
 
 ## Features
 
