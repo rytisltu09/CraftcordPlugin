@@ -1,41 +1,78 @@
 # CraftCordPlugin
 
-CraftCordPlugin is a **Paper-only** Minecraft server plugin that exposes authenticated HTTP and WebSocket APIs for the CraftCord Python SDK.
+**CraftCordPlugin is a Paper plugin that exposes your Minecraft server through secure HTTP and WebSocket APIs.**
 
-It is the Minecraft-side bridge in this architecture:
+It allows external applications to communicate with your Minecraft server in real time, making it easy to build Discord bots, web dashboards, desktop applications, mobile apps, automation tools, and custom integrations.
 
-Paper Server -> CraftCordPlugin -> HTTP/WebSocket API -> CraftCord Python SDK -> Discord bots and automation apps
+CraftCordPlugin is the official backend for the **CraftCord** Python SDK, but its HTTP and WebSocket APIs can be used from **any programming language** capable of making HTTP requests or WebSocket connections.
 
-## Features
+---
 
-- Paper-native plugin targeting Java 21 and modern Paper APIs
-- Authenticated HTTP and WebSocket endpoints for the existing Python SDK
-- Action RPC layer for Minecraft server operations
-- Live event streaming to authenticated WebSocket clients
-- Main-thread safe execution for all Paper API access
-- Clean separation between transport, auth, routing, and Minecraft service logic
+# ✨ Features
 
-## Requirements
+- 🌐 HTTP & WebSocket APIs
+- 🔐 Bearer Token authentication
+- ⚡ Real-time Minecraft events
+- 💬 Send chat messages remotely
+- 🖥 Execute Minecraft commands
+- 👥 Retrieve online player information
+- 📊 Access server information
+- 👢 Kick and ban players
+- 🧵 Thread-safe Paper API integration
+- ⚙️ Lightweight configuration
+- 🔌 Language-agnostic protocol
 
-- Paper 1.21.x
-- Java 21+
+---
 
-## Installation
+# 🚀 Perfect For
 
-1. Build the plugin jar:
+CraftCordPlugin enables you to build:
 
-```bash
-./gradlew clean shadowJar
+- Discord bots
+- Web dashboards
+- Mobile applications
+- Desktop applications
+- Moderation tools
+- Server management panels
+- Monitoring services
+- Economy integrations
+- Automation systems
+- Custom APIs
+- Any software capable of making HTTP or WebSocket requests
+
+---
+
+# 📋 Requirements
+
+- Paper **1.21.x**
+- Java **21+**
+
+---
+
+# 📦 Installation
+
+### Modirinth Link: https://modrinth.com/plugin/craftcord-plugin
+
+Copy the generated JAR into your server's `plugins/` folder.
+
+```
+plugins/
+└── CraftCordPlugin-x.x.x.jar
 ```
 
-2. Copy `build/libs/CraftCordPlugin-<version>.jar` into your Paper server `plugins/` directory.
-3. Start the server once to generate `plugins/CraftCordPlugin/config.yml`.
-4. Edit `apiToken` in the config to a strong secret value.
-5. Restart the server.
+Start the server once.
 
-## Configuration
+The plugin will automatically generate:
 
-`config.yml`:
+```
+plugins/CraftCordPlugin/config.yml
+```
+
+Edit the configuration and restart your server.
+
+# ⚙️ Configuration
+
+Example `config.yml`:
 
 ```yaml
 # local = localhost only, global = network-accessible on all interfaces
@@ -43,11 +80,15 @@ bindMode: local
 # Optional explicit host override (for example: 192.168.1.50)
 host: ""
 port: 8080
-websocketPath: /ws
+
 httpBasePath: /api/v1
+websocketPath: /ws
+
 apiToken: change-me
+
 enableHttp: true
 enableWebSocket: true
+
 logRequests: false
 logEvents: false
 ```
@@ -57,48 +98,80 @@ logEvents: false
 - Use `host` only when you want to bind to a specific interface IP.
 
 ### Security notes
+---
 
-- Always set a strong `apiToken` in production.
-- Use a firewall or reverse proxy to restrict API exposure.
-- Never share bearer tokens in logs or screenshots.
+# 🔒 Security
 
-## HTTP API
+CraftCordPlugin authenticates every HTTP request and WebSocket connection using **Bearer Tokens**.
 
-### Validate token
+For production environments it is recommended to:
 
-`GET /api/v1/auth/validate`
+- Generate a strong API token.
+- Keep the API behind a firewall or reverse proxy.
+- Never expose your token publicly.
+- Disable transports you don't use.
 
-Header:
+---
+
+# 🏗 Architecture
 
 ```text
+        External Applications
+
+ Discord Bot   Dashboard   Mobile App
+        │           │            │
+        └───────────┴────────────┘
+                    │
+            HTTP / WebSocket
+                    │
+            CraftCordPlugin
+                    │
+             Minecraft Server
+```
+
+---
+
+# 🌐 HTTP API
+
+## Validate Authentication
+
+```
+GET /api/v1/auth/validate
+```
+
+Headers:
+
+```http
 Authorization: Bearer <token>
 ```
 
-- `200` when token is valid
-- `401` when token is invalid
+Responses:
 
-### RPC endpoint
+| Status | Description |
+|---------|-------------|
+| 200 | Token is valid |
+| 401 | Invalid or missing token |
 
-`POST /api/v1/rpc`
+---
 
-Header:
+## Remote Procedure Call (RPC)
 
-```text
-Authorization: Bearer <token>
+```
+POST /api/v1/rpc
 ```
 
-Request:
+Example request:
 
 ```json
 {
   "action": "minecraft.execute",
   "payload": {
-    "command": "say hello"
+    "command": "say Hello World!"
   }
 }
 ```
 
-Success:
+Success response:
 
 ```json
 {
@@ -109,7 +182,7 @@ Success:
 }
 ```
 
-Failure:
+Error response:
 
 ```json
 {
@@ -119,16 +192,24 @@ Failure:
 }
 ```
 
-## WebSocket API
+---
 
-Endpoint: `/ws`
+# 🔌 WebSocket API
 
-Authentication:
+Endpoint:
 
-- Preferred: `Authorization: Bearer <token>` header on connect
-- Also supported: `auth.validate` action after connection
+```
+/ws
+```
 
-Request envelope:
+Authentication methods:
+
+- `Authorization: Bearer <token>` during connection
+- `auth.validate` after connecting
+
+---
+
+## Request Envelope
 
 ```json
 {
@@ -139,7 +220,7 @@ Request envelope:
 }
 ```
 
-Success envelope:
+## Success Response
 
 ```json
 {
@@ -150,7 +231,7 @@ Success envelope:
 }
 ```
 
-Error envelope:
+## Error Response
 
 ```json
 {
@@ -162,7 +243,9 @@ Error envelope:
 }
 ```
 
-Event envelope:
+---
+
+## Event Example
 
 ```json
 {
@@ -170,7 +253,7 @@ Event envelope:
   "event": "player_join",
   "data": {
     "player": {
-      "uuid": "uuid-string",
+      "uuid": "3b5e4f2d-8e34-4ad1-848f-b9d66fd07a4f",
       "username": "Alex",
       "health": 20.0,
       "world": "world",
@@ -186,17 +269,29 @@ Event envelope:
 }
 ```
 
-## Supported actions
+---
+
+# ⚡ Supported Actions
+
+Current RPC actions include:
 
 - `auth.validate`
-- `minecraft.send_message`
-- `minecraft.execute`
 - `minecraft.get_players`
 - `minecraft.get_server_info`
+- `minecraft.send_message`
+- `minecraft.execute`
 - `minecraft.kick`
 - `minecraft.ban`
 
-## Supported events
+Additional actions may be added in future releases while maintaining backwards compatibility.
+
+---
+
+# 📡 Supported Events
+
+CraftCordPlugin streams live Minecraft events over WebSockets.
+
+Built-in events include:
 
 - `player_join`
 - `player_leave`
@@ -205,7 +300,31 @@ Event envelope:
 - `server_start`
 - `server_stop`
 
-## Development
+---
+
+# 🐍 Official Python SDK
+
+CraftCordPlugin is designed to work seamlessly with the official **CraftCord** Python SDK.
+
+The SDK provides:
+
+- Async Python client
+- Typed Minecraft models
+- Event system
+- Command framework
+- Plugin/extension system
+- Built-in `discord.py` adapter
+
+GitHub repositories:
+
+- **CraftCord SDK:** https://github.com/rytisltu09/Craftcord
+- **CraftCordPlugin:** https://github.com/rytisltu09/CraftcordPlugin
+
+Although the Python SDK is the official client, **any language capable of making HTTP requests or WebSocket connections can integrate with CraftCordPlugin** by implementing the documented protocol.
+
+---
+
+# 🛠 Development
 
 Run tests:
 
@@ -213,15 +332,20 @@ Run tests:
 ./gradlew test
 ```
 
-Build plugin:
+Build:
 
 ```bash
 ./gradlew clean build
 ```
 
-Run local Paper test server:
+Run a local Paper development server:
 
 ```bash
 ./gradlew runServer
 ```
 
+---
+
+# 📄 License
+
+MIT License.
