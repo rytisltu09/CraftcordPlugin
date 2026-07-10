@@ -1,4 +1,7 @@
-host: 0.0.0.0
+# local = localhost only (127.0.0.1), global = all interfaces (0.0.0.0)
+bindMode: local
+# Optional explicit host override. Leave empty to use bindMode.
+host: ""
 port: 8080
 websocketPath: /ws
 httpBasePath: /api/v1
