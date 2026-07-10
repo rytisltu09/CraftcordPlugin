@@ -75,7 +75,10 @@ Edit the configuration and restart your server.
 Example `config.yml`:
 
 ```yaml
-host: 0.0.0.0
+# local = localhost only, global = network-accessible on all interfaces
+bindMode: local
+# Optional explicit host override (for example: 192.168.1.50)
+host: ""
 port: 8080
 
 httpBasePath: /api/v1
@@ -90,6 +93,11 @@ logRequests: false
 logEvents: false
 ```
 
+- Set `bindMode: local` to keep the API reachable only from the same machine.
+- Set `bindMode: global` to allow LAN/WAN access (use firewall/reverse proxy rules).
+- Use `host` only when you want to bind to a specific interface IP.
+
+### Security notes
 ---
 
 # 🔒 Security

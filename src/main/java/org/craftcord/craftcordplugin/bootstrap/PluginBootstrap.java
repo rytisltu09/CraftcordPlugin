@@ -77,7 +77,15 @@ public final class PluginBootstrap {
         pluginManager.registerEvents(paperEventListener, plugin);
 
         paperEventListener.publishServerStart();
-        logger.info("CraftCord API started on " + config.host() + ":" + config.port());
+        logger.info(
+                "CraftCord API started on "
+                        + config.host()
+                        + ":"
+                        + config.port()
+                        + " [binding="
+                        + describeBinding(config.host())
+                        + "]"
+        );
     }
 
     public void stop() {
@@ -94,6 +102,18 @@ public final class PluginBootstrap {
         if ("change-me".equals(token)) {
             logger.warning("CraftCord apiToken is using default value. Update config.yml before production use.");
         }
+    }
+
+    private String describeBinding(String host) {
+        if ("127.0.0.1".equals(host) || "localhost".equalsIgnoreCase(host)) {
+            return "local-only";
+        }
+
+        if ("0.0.0.0".equals(host) || "::".equals(host)) {
+            return "global-all-interfaces";
+        }
+
+        return "specific-interface";
     }
 }
 
